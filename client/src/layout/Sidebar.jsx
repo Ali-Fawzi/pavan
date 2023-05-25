@@ -2,23 +2,25 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from '../assets/logo192.png'
 import {CgArrowRightO} from 'react-icons/cg'
+import {GiHamburgerMenu} from 'react-icons/gi'
 const Sidebar = ({ links, children }) => {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
+    const [mobileOpen, setMobileOpen] = useState(false);
     return (
         <section className="flex h-screen w-screen">
             <div
                 className={`${
                     open ? 'w-72' : 'w-20'
-                } bg-gradient-to-br from-cyan-700 to-cyan-600 h-screen p-5 pt-8 relative duration-300`}
-            >
+                } absolute md:relative bg-gradient-to-br from-cyan-700 to-cyan-600 h-screen p-5 pt-8 duration-300 md:block
+                    ${mobileOpen ? 'block' : 'hidden'}`}>
                 <button
-                    className={`absolute cursor-pointer -right-2 top-9 bg-white border-cyan-600
-          border-2 rounded-full duration-300 ${!open && 'rotate-180'}`}
+                    className={`md:block hidden absolute cursor-pointer -right-2 top-9 bg-white border-cyan-600
+                    border-2 rounded-full duration-300 ${!open && 'rotate-180'}`}
                     onClick={() => setOpen(!open)}
                 >
                     <CgArrowRightO/>
                 </button>
-                <div className="flex gap-x-4 items-center p-2">
+                <div className=" gap-x-4 items-center p-2 hidden md:block">
                     <img
                         src={logo}
                         className={`cursor-pointer duration-500 h-7 ${
@@ -51,7 +53,10 @@ const Sidebar = ({ links, children }) => {
                     }
                 </ul>
             </div>
-            <div className="w-full p-7 bg-slate-100">{children}</div>
+            <button className="top-0 -left-0 p-2 md:hidden absolute" onClick={() => setMobileOpen(!mobileOpen)}>
+                <GiHamburgerMenu/>
+            </button>
+            <div className="w-full p-5 md:p-7 bg-slate-100">{children}</div>
         </section>
     );
 };
