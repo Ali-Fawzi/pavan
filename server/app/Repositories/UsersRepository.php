@@ -8,8 +8,16 @@ use Illuminate\Http\JsonResponse;
 
 class UsersRepository implements IUsersRepository
 {
+
+
+    /**
+     * Returns a JSON response with the users and their roles.
+     *
+     * @return JsonResponse
+     */
     public function index(): JsonResponse
     {
-        return response()->json(User::all());
+        return response()->json(User::select('id', 'name', 'role_id')->with('role:id,name')->get());
     }
+
 }
