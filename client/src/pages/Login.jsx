@@ -3,6 +3,7 @@ import Input from "../component/Input";
 import logo from "../assets/logo192.png"
 import {useNavigate} from "react-router-dom";
 import jwtDecode from "jwt-decode";
+import api from "../api/api";
 const fields = [
     {
         id: "email",
@@ -29,19 +30,8 @@ fields.forEach(field => fieldsState[field.id] = '');
 
 async function loginUser(credentials) {
     try {
-        const response = await fetch('http://localhost:8000/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(credentials),
-        });
-
-        if (response.ok) {
-            return await response.json();
-        } else {
-            throw new Error(`HTTP-Error: ${response.status}`);
-        }
+        const response = await api.post('/login', credentials);
+        return response.data;
     } catch (error) {
         console.error("Error:", error);
     }

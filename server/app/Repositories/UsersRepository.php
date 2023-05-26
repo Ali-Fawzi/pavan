@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Interfaces\IUsersRepository;
+use http\Env\Request;
 use Illuminate\Http\JsonResponse;
 
 class UsersRepository implements IUsersRepository
@@ -17,7 +18,7 @@ class UsersRepository implements IUsersRepository
      */
     public function index(): JsonResponse
     {
-        return response()->json(User::select('id', 'name', 'role_id')->with('role:id,name')->get());
+        return response()->json(User::select('id', 'name', 'role_id','email')->with('role:id,name')->get());
     }
 
 }

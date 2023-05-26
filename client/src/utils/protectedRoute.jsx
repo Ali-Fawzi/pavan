@@ -13,7 +13,7 @@ const ProtectedRoute = ({ component: Component, requiredRole }) => {
     const decodedToken = jwt_decode(accessToken);
     const userRole = decodedToken.role;
 
-    return userRole === requiredRole ? <Component /> : <Navigate to="/" />;
+    return userRole === requiredRole ? <Component /> : <Navigate to="/" replace={true} />;
 };
 
 export default ProtectedRoute;

@@ -1,10 +1,24 @@
+import React, {useEffect, useState} from 'react';
 import Layout from "../../layout/Layout";
-import {useMemo} from "react";
-import {getUsersData} from "../../data/dummy";
-import Table from "../../component/Table";
+import api from "../../api/api";
+import {useTable} from "react-table";
 
-export default function Users(){
-    const columns = useMemo(
+export default function Users() {
+    const [users, setUsers] = useState([]);
+    useEffect(() => {
+        api
+            .get('/users')
+            .then((res) => {
+                setUsers(res.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching users:', error);
+            });
+    }, []);
+
+    const data = React.useMemo(() => users, [users]);
+
+    const columns = React.useMemo(
         () => [
             {
                 Header: 'ID',
@@ -20,47 +34,39 @@ export default function Users(){
             },
             {
                 Header: 'Role',
-                accessor: 'role',
+                accessor: 'role.name',
             },
         ],
         []
     );
 
-    const data = useMemo(() => getUsersData(), []);
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 
     return (
         <Layout>
-            <div className="w-full h-full">
-                <h1 className="text-2xl font-bold mb-6">User Table</h1>
-                {/*<Table columns={columns} data={data} />*/}
-                <table className="table-auto w-full">
-                    <thead>
-                    <tr>
-                        <th>Song</th>
-                        <th>Artist</th>
-                        <th>Year</th>
+            <table {...getTableProps()} style={{ width: '100%', textAlign: 'left' }}>
+                <thead>
+                {headerGroups.map((headerGroup) => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map((column) => (
+                            <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                        ))}
                     </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>The Sliding Mr. Bones (Next Stop, Pottersville)</td>
-                        <td>Malcolm Lockyer</td>
-                        <td>1961</td>
-                    </tr>
-                    <tr>
-                        <td>Witchy Woman</td>
-                        <td>The Eagles</td>
-                        <td>1972</td>
-                    </tr>
-                    <tr>
-                        <td>Shining Star</td>
-                        <td>Earth, Wind, and Fire</td>
-                        <td>1975</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                {rows.map((row) => {
+                    prepareRow(row);
+                    return (
+                        <tr {...row.getRowProps()}>
+                            {row.cells.map((cell) => {
+                                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                            })}
+                        </tr>
+                    );
+                })}
+                </tbody>
+            </table>
         </Layout>
-
     );
 }

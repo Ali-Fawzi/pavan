@@ -11,8 +11,10 @@ const Sidebar = ({ links, children }) => {
             <div
                 className={`${
                     open ? 'w-72' : 'w-20'
-                } absolute md:relative bg-gradient-to-br from-cyan-700 to-cyan-600 h-screen p-4 pt-8 duration-300 md:block
-                    ${mobileOpen ? 'block' : 'hidden'}`}>
+                } absolute md:relative bg-gradient-to-br from-cyan-700 to-cyan-600 h-screen p-4 pt-8 md:opacity-100 md:transform-none sidebar-transition ${
+                    mobileOpen ? 'opacity-100 transform-none' : 'opacity-0 -translate-x-full'
+                }`}
+            >
                 <button
                     className={`md:block hidden absolute cursor-pointer -right-2 top-9 bg-white border-cyan-600
                     border-2 rounded-full duration-300 ${!open && 'rotate-180'}`}
